@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package bidirectional;
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+enum RpcService {
+  // struct TestService {}
+  // struct TestClient {}
+  Test = 0;
+}
+
+enum RpcFunction {
+  // struct TestService {
+  //    async test_unary(request: &mut MessageRequest, response: &mut MessageResponse) {}
+  // }
+  // struct TestClient {
+  //    async test_unary(request: &mut MessageRequest) -> MessageResponse {}
+  // }
+  UnaryTest = 0;
+  // struct TestService {
+  //    async test_client_stream(request: &mut std::mpsc::Receiver<MessageRequest>, response: &mut MessageResponse) {}
+  // }
+  // struct TestClient {
+  //    async test_client_stream(request: &mut std::mpsc::Receiver<MessageRequest>) -> MessageResponse {}
+  // }
+  ClientStreamTest = 1;
+  // struct TestService {
+  //    async test_server_stream(request: &mut MessageRequest>, response: &mut std::mpsc::Receiver<MessageResponse>) {}
+  // }
+  // struct TestClient {
+  //    async test_server_stream(request: &mut MessageRequest>) -> std::mpsc::Receiver<MessageResponse> {}
+  // }
+  ServerStreamTest = 2;
+  // struct TestService {
+  //     async fn test_bidirectional_stream(request: &mut std::mpsc::Receiver<MessageRequest>, response: &mut std::mpsc::Receiver<MessageResponse>) {}
+  // }
+  // struct TestClient {
+  //     async fn test_bidirectional_stream(request: &mut std::mpsc::Receiver<MessageRequest>) -> std::mpsc::Receiver<StreamResponse> {}
+  // }
+  BidirectionalStreamTest = 3;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+message MessageRequest {
+  string text = 1;
+  bytes content = 2;
+}
+
+message StreamRequest {
+  string text = 1;
+  bytes content = 2;
+}
+
+message MessageResponse {
+  string text = 1;
+  bytes content = 2;
+}
+
+message StreamResponse {
+  string text = 1;
+  bytes content = 2;
+}
+
+message RpcRequest {
+  uint32 version = 1;
+  RpcService service = 2;
+  RpcFunction func = 3;
+  oneof payload {
+    MessageRequest message = 4;
+    StreamRequest stream = 5;
+  }
+}
+
+message RpcResponse {
+  uint32 version = 1;
+  RpcService service = 2;
+  RpcFunction func = 3;
+  oneof payload {
+    MessageResponse message = 4;
+    StreamResponse stream = 5;
+  }
+}
+
+
+// service TestService {
+//   rpc test_unary(RpcRequest) returns (RpcResponse);
+//   rpc test_client_stream(stream RpcRequest) returns (RpcResponse);
+//   rpc test_server_stream(RpcRequest) returns (stream RpcResponse);
+//   rpc test_bidirectional_stream(stream RpcRequest) returns (stream RpcResponse);
+// }
