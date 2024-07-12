@@ -21,13 +21,9 @@ pub mod bidirectional {
 }
 
 // my service
-pub mod id_generator;
 pub mod my_rpc_service;
-pub mod object_pool;
 pub mod quick_rpc_service;
-use id_generator::IdGenerator;
 use my_rpc_service::MyRpcService;
-use object_pool::ObjectPool;
 
 
 
